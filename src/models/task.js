@@ -3,7 +3,6 @@ const mongoose=require('mongoose');
 const taskSchema=new mongoose.Schema({
     title:{
         type:String,
-        required:true,
         trim:true
     },
     description:{
@@ -12,7 +11,8 @@ const taskSchema=new mongoose.Schema({
         trim:true
     },
     tags:{
-        type:String
+        type:String,
+        trim:true
     },
     owner:{
         type:mongoose.Schema.Types.ObjectId,
