@@ -80,13 +80,26 @@ userSchema.statics.findByCredentials=async (email, password) => {
     }
     return user
 }
-
+function isTokenExpired(token) {
+    const payloadBase64 = token.split('.')[1];
+    const decodedJson = Buffer.from(payloadBase64, 'base64').toString();
+    const decoded = JSON.parse(decodedJson)
+    const exp = decoded.exp;
+    console.log(Date.now());
+    const expired = (Date.now() >= exp * 1000)
+    return expired
+  }
 //hash plain text password
 userSchema.pre('save', async function(next){
     const user=this;
 
     if(user.isModified('password')){
         user.password=await bcrypt.hash(user.password, 8)
+    }
+    if(user.isModified('tokens')){
+        user.tokens=user.tokens.filter((token) => {
+            return (!(isTokenExpired(token.token)));
+        })
     }
 
     next();
