@@ -2,7 +2,8 @@ const mongoose=require('mongoose');
 const validator=require('validator');
 const bcrypt=require('bcryptjs');
 const jwt=require('jsonwebtoken')
-const Task=require('./task')
+const Task=require('./task');
+const { db } = require('./task');
 
 const userSchema=new mongoose.Schema({
     name:{
@@ -13,6 +14,7 @@ const userSchema=new mongoose.Schema({
     email:{
         type:String,
         unique:true,
+        index:true,
         required:true,
         trim:true,
         lowercase:true,
@@ -113,6 +115,5 @@ userSchema.pre('remove', async function(next){
 })
 
 const User=mongoose.model('User',userSchema);
-User.createIndex( { email: 1 }, { unique: true } )
 
 module.exports=User;
